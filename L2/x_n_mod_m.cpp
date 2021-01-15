@@ -45,7 +45,7 @@ int main()
     cout << "Enter Algorithm (0 - Recursive, 1 - factored)" << endl;
     cin >> algorithm_type;
 
-    if (algorithm_type == 0)
+    if (algorithm_type== 0)
     {
         start = clock();
         output = Rpower(x, n, m);
