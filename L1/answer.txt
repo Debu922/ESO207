@@ -1,0 +1,2 @@
+For n = 30000000000, Ifib takes about 64 sec
+For n = 49, Rfib takes about 61 sec
