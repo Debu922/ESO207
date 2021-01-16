@@ -3,6 +3,13 @@
 
 using namespace std;
 
+/**
+ * Rfib - Recursive fibbonacci
+ * 
+ * @param n to which fibbionaci number is to be calculated.
+ * 
+ * @return nth fibonnacci trimmed by 2020.
+ */
 int Rfib(long long int n)
 {
     if (n == 0)
@@ -15,6 +22,13 @@ int Rfib(long long int n)
     }
 }
 
+/**
+ * Ifib - Iterative fibbonacci
+ * 
+ * @param n to which fibbionaci number is to be calculated.
+ * 
+ * @return nth fibonnacci trimmed by 2020.
+ */
 int Ifib(long long int n)
 {
     if (n == 0)
@@ -25,7 +39,7 @@ int Ifib(long long int n)
     {
         int a = 0;
         int b = 1;
-        for (long long int i = 2; i <= n; i++)
+        for (long long int i = 1; i <= n; i++)
         {
             int temp = b;
             b = a + b;
@@ -35,6 +49,15 @@ int Ifib(long long int n)
     }
 }
 
+/**
+ * matrix_mul - multiplies two matrixes
+ * 
+ * @param a 2x2 matrix to be multiplied (on the left).
+ * @param b 2x2 matrix to be multiplied (on the right).
+ * @param result 2x2 matrix which will store the result for the multiplication.
+ * 
+ * @return void.
+ */
 void matrix_mul(int a[2][2], int b[2][2], int result[2][2])
 {
     for (int i = 0; i < 2; i++)
@@ -51,9 +74,17 @@ void matrix_mul(int a[2][2], int b[2][2], int result[2][2])
     }
 }
 
+/**
+ * get_n_matrix - Calculate the A^n matrix recursively.
+ * 
+ * @param n 2x2 matrix to be multiplied (on the left).
+ * @param result 2x2 matrix which will store the resultant matrix.
+ * 
+ * @return void.
+ */
 void get_n_matrix(long long int n, int result[2][2])
 {
-    if (n == 1|| n == 0)
+    if (n == 1 || n == 0)
     {
         result[0][0] = 1;
         result[1][0] = 1;
@@ -62,7 +93,6 @@ void get_n_matrix(long long int n, int result[2][2])
         return;
     }
 
-    
     if (n % 2 == 0)
     {
         int matrix[2][2] = {1, 1, 1, 1};
@@ -81,7 +111,14 @@ void get_n_matrix(long long int n, int result[2][2])
     }
 }
 
-int fastfib(long long int n)
+/**
+ * Ffib - Fast fibbonacci
+ * 
+ * @param n to which fibbionaci number is to be calculated.
+ * 
+ * @return nth fibonnacci trimmed by 2020.
+ */
+int Ffib(long long int n)
 {
     if (n == 0)
     {
@@ -93,8 +130,8 @@ int fastfib(long long int n)
     }
     else
     {
-        int matrix[2][2]={0};
-        get_n_matrix(n - 1, matrix);
+        int matrix[2][2] = {0};
+        get_n_matrix(n, matrix);
         return matrix[0][0];
     }
 }
@@ -123,9 +160,10 @@ int main()
         output = Ifib(n);
         end = clock();
     }
-    else {
+    else
+    {
         start = clock();
-        output = fastfib(n);
+        output = Ffib(n);
         end = clock();
     }
 
