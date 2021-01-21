@@ -1,0 +1,4 @@
+Largest sub array with sum 36
+5 7 -6 22 -4 5 7 
+Time Taken(s): 5e-06
+Program has ended. 
