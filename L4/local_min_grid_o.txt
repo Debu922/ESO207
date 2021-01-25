@@ -1,0 +1,2 @@
+The position of local minima is (2,0)
+The value of the local minima is 3
