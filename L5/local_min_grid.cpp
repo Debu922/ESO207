@@ -1,4 +1,4 @@
-// This Algorithm runs with O(nlog(n))
+// This Algorithm runs with O(log(n)
 #include <iostream>
 #define MAX_ARRAY_SIZE 100
 

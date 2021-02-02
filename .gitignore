@@ -17,3 +17,8 @@
 *.code-workspace
 .vscode/tasks.json
 .vscode/launch.json
+
+# Assignments #
+###############
+PA_*/*
+TA_*/*
