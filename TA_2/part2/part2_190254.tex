@@ -1,0 +1,284 @@
+\documentclass[10pt, a4paper]{article}
+
+% Formatting
+
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper, top=1cm, left = 2cm, right = 2cm, bottom = 2cm]{geometry}
+\usepackage[titletoc, title]{appendix}
+
+\usepackage{amsmath, amsfonts, amssymb, mathtools}
+\usepackage{graphicx, float}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{xcolor}
+%New colors defined below
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+%Code listing style named "mystyle"
+\lstdefinestyle{mystyle}{
+  backgroundcolor=\color{backcolour},   commentstyle=\color{codegreen},
+  keywordstyle=\color{magenta},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,         
+  breaklines=true,                 
+  captionpos=b,                    
+  keepspaces=true,                 
+  numbers=left,                    
+  numbersep=5pt,                  
+  showspaces=false,                
+  showstringspaces=false,
+  showtabs=false,                  
+  tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\newcommand{\BigO}{\mathcal{O}}
+\newcommand{\get}{\leftarrow}
+\title{ESO207: Theoretical Assignment 2 - Part 2}
+\author{Debaditya Bhattacharya}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\begin{minipage}{2in}
+    \textbf{Name: }Debaditya Bhattacharya \\
+    \textbf{Email id: }debbh@iitk.ac.in  
+\end{minipage}
+\hfill
+\noindent\begin{minipage}{1.7in}
+    \textbf{Roll No: }190254\\
+    \textbf{Hackerrank Id: }debbh922
+\end{minipage}
+\parskip 0.3cm
+\parindent 0cm
+\rule{\textwidth}{1px}
+
+%--------Problem 4-------
+
+\large{\textbf{Problem 4}}
+\normalsize
+
+\textbf{Description:}
+
+This problem is a modified version of the count inversions algorithm that was discussed in class and in programming assignment 2. To solve this we, can simply borrow the same algorithm used earlier(modified merge sort, $T = \BigO(n\log n$), and modify our input accordingly. Counting number of elements that are smaller to the right is equivalent to finding the number of elements which are greater and to the left in an new array which is formed by reversing the array, and taking its negative($A[i]$ swapped with $-A[N-1-i]$). This operation can be done in $\BigO(N)$. Hence the overall time complexity is $T = \BigO(N) + \BigO(N\log N) = \BigO(N\log N)$
+
+\textbf{Algorithm:}
+\begin{lstlisting}[language=Python,caption= Count smaller to right]
+#A struct used for holding the index and the value together while sorting
+struct data_struct:
+    int index
+    int value
+
+#Merge and count function (T = O(L-R))
+def merge_and_count_strict_inversions(data_structs, L, mid, R, counts):
+    p <- L #index for left array
+    j <- mid + 1 #index for right array
+    copy <- empty array of size R-L+1
+    r <- 0 #index for copy array
+    
+    #p should be in between L and mid, j should be in between mid and R.
+    while p <= mid && j <= R:
+
+        #value[p] <= value[j] -> Not a strict inversion. Copy value at p.
+        if (data_structs[p].value <= data_structs[j].value): 
+            copy[r] <- data_structs[p]
+            r++
+            p++
+
+        #value[p] < value[j] -> Strict Inversion. Copy value at j. Increment count j by number of smaller elements (mid-p+1)
+        else:
+            copy[r] <- data_structs[j]
+            counts[data_structs[j].index] += mid - p + 1
+            j++
+            r++
+    
+    #Copy the rest of values in left subarray
+    while p <= mid: 
+        copy[r] <- data_structs[p]
+        r++
+        p++
+    
+    #Copy the rest of the values in the right subarray
+    while j <= L: 
+        copy[r] <- data_structs[j]
+        r++;
+        j++;
+
+    #Overwrite data_structs with the temporary copy array
+    for x from 0 to R-L:
+        data_structs[i+x] <- copy[x]
+
+
+
+#Please turn over
+
+#Recursive sort and count algorithm T = O(N)
+def sort_and_count_strict_inversions(data_structs, L, R, counts)
+
+    #Base case
+    if L == R:
+        return
+    
+    else:
+        mid <- (L + R) / 2 #dividing the array (for divide and conquer)
+        #sort and count left half T = T(N/2)
+        sort_and_count_strict_inversions(data_structs, L, mid, counts)
+        #sort and count right half T = T(N/2)
+        sort_and_count_strict_inversions(data_structs, mid+1, R, counts)
+        #merge and count cross terms T = O(N)
+        merge_and_count_strict_inversions(data_structs, L, mid, R, counts)
+    return
+
+#Driver function
+def count_smaller_right(A):
+    N <- length(A) #Get the length
+    data_structs <- empty array of data_struct #data_struct is a tuple of values and tuples of the original array
+
+    #Array modification (T = O(N))
+    for i from 0 to N-1:
+        data_structs[N-1-i].value <- -A[i] #flip order and negate the original array
+        data_structs[i].index <- i
+        
+    counts <- array of zeros of size N
+
+    #sort and count strict inversions algorithm (T = O(NlogN))
+    sort_and_count_strict_inversions(data_structs, 0, N - 1, counts)
+    
+    output <- empty array of size N
+    
+    #Reverse counts to get correct order. T = O(N)
+    for i from 0 to N-1:
+        output[i] <- counts[N-1-i]
+        
+    return output
+
+\end{lstlisting}
+
+\textbf{Time Complexity Analysis:}
+
+Count inversions can be implemented via a modified merge sort in $T = \BigO(N\log N)$ as we have seen in class. Modifying the input array $A$ into a new array $B$ via tha transformation $B[i] = A[N-1-i]$ takes $T=\BigO(N)$. Transforming the count array to our desired output array takes $T=\BigO(N)$. The overall time complexity of the algorithm is hence $T = \BigO(N\log N) + \BigO(N) + \BigO(N) = \BigO(N\log N)$
+
+\rule{\textwidth}{0.8pt}
+\vspace{5pt}
+
+%--------Problem 5-------
+
+\large{\textbf{Problem 5}}
+\normalsize
+
+\textbf{Description:}
+
+To solve this question we note that in a connected graph, if there are no cycles, then the number of edges in the graph is constricted by $V-1$. Consider our graph to be made of $i$ chunks of connected graphs. To find if a connected graph has a cycle, we can run a breadth / depth first search, and keep a track of which nodes have been visited, and upon finding a cycle terminate the program. If we do not find a cycle, return false.
+
+\textbf{Algorithm:}
+\begin{lstlisting}[language=Python,caption= Check cycle]
+    #Traverse via depth first traversal, and check for cycles
+    def traverse_and_check(adj_list, node, visited, parent):
+        stack <- Empty queue #Create an empty queue for bfs
+        stack.push(node) #insert first node
+        current <- NULL #create variable called current.
+        
+        while !stack.isEmpty(): #Run until the stack is empty
+            current <- stack.pop() #Pop topmost element in stack.
+            adjacent <- adj_list[current] #Get head of adjacency list for current element
+            
+            while adjacent.next != NULL: #Traverse adjacency list
+                
+                if visited[adjacent.value] == True:       #If adjacent element already visited
+                    if adjacent.value != parent[current]: #If it is not the parent of the current element
+                        return True                       #It must be a cycle. Return true
+                    
+                else:                                     #If not visited, add to queue, make visited = 1, and assign current node as parent.
+                    stack.push(adjacent.value)
+                    parent[adjacent.value] <- current
+                    visited[adjacent.value] = 1
+                    
+                adjacent <- adjacent.next                 #Go to next element in adjacency list
+                     
+    #Driver code 
+    def find_cycle(V, adj_list):
+        visited <- array of zeros of size V
+        parents <- array of -1 of size V
+        has_cycle <- False #Base assumption
+        for node in V: #This loop has a runtime of T = O(V)
+            if visited[node] == 0: #If node is unvisited, run a traverse and check on it.
+                has_cycle <- traverse_and_check(adj_list, node, visited)
+                if has_cycle: #If has cycle, return true to terminate the program.
+                    return True
+                
+        return False #All nodes have been checked and there are no cycles. 
+\end{lstlisting}
+
+\textbf{Time Complexity Analysis:}
+
+For a connected graph with $V_i$ nodes and $E_i$ edges the time complexity of a breadth first traversal is given as $T = \BigO(V_i + E_i)$. However for a connected graph with no cycles, $E_i$ is upper bounded by $V_i - 1$. Hence to run a depth first traversal to find if a graph has cycle will take time $T = \BigO(V_i + V_i -1) = \BigO(V_i)$. The given graph may be considered to be made up of $k$ many individual connected graphs. The total number of nodes is given as $V = \sum_{i=0}^{k-1} V_i$. The running time for the loop in \lstinline{find_cycle} is $\BigO(V)$ and hence the overall running time for the algorithm is $T = \BigO(V) + \BigO(V_0) + \BigO(V_1) + \dots = \BigO(V)$ (Total edges are again still upper bounded by $V-1$ for a fully connected graph with no cycles). Hence overall running time complexity is $T= \BigO(V)$
+
+The data structures used in this question are arrays to store pointers, singly linked lists which stores the adjacency lists for the graph and a stack for the depth first traversal. Had we decided to go with a breadth first traversal, we would have required a queue instead of a stack.
+
+\rule{\textwidth}{0.8pt}
+\vspace{5pt}
+
+%--------Problem 6-------
+\large{\textbf{Problem 6}}
+\normalsize
+
+\textbf{Description:}
+
+The problem can be seen as a graph traversal problem with the requirement of finding the shortest path between nodes in a graph. To do this we employ the Breadth First Search (BFS) implemented via a queue.
+
+\textbf{Algorithm:}
+\begin{lstlisting}[language=Python,caption= Get Minimum Knight Moves]
+def valid_pos(pos,N): #Function to check if position is within board. #T(N) = O(1)
+    if 0 < pos[0] <= N and 0 < pos[1] <= N:
+        return True
+    else:
+        return False
+
+def get_min_knight_moves(N, start, end): #Function to get minimum moves of knight.
+    distance <- zeros(N,N) #Matrix of N,N with all entries zeros #S(N) = O(N)
+
+    queue = [] #Initialize a queue for BFS
+    queue.append(start) #Add starting element to queue.
+
+    while len(queue) != 0: #Breadth First Search
+        current = queue.pop(0)
+        #Calculate all possible positions the knight can move to.
+        neighbours=[(current[0]+2, current[1]+1), 
+                    (current[0]+2, current[1]-1),
+                    (current[0]-2, current[1]+1),
+                    (current[0]-2, current[1]-1),
+                    (current[0]+1, current[1]+2),
+                    (current[0]-1, current[1]+2),
+                    (current[0]+1, current[1]-2),
+                    (current[0]-1, current[1]-2)
+                    ]
+
+        good_neighbours = [] #Find neighbours which are valid positions on the board
+        for neighbour in neighbours:
+            if valid_pos(neighbour,N):
+                good_neighbours.append(neighbour);
+                
+        for neighbour in good_neighbours:
+            #If distance == 0, cell is unvisited. Calculate its distance and add it to the queue.
+            if distance[neighbour[0]-1][neighbour[1]-1] == 0:
+                queue.append(neighbour)
+                distance[neighbour[0]-1][neighbour[1]-1] = distance[current[0]-1][current[1]-1] + 1
+            #If we have reached the end, terminate the loop return the distance.
+            if neighbour == end:
+                return distance[neighbour[0]-1][neighbour[1]-1]
+\end{lstlisting}
+
+\textbf{Time and Space Complexity Analysis:}
+
+The algorithm used is a BFS algorithm. The time complexity of the algorithm arises from having to calculate all possible neighbours of a cell for each cell. Due to the rules binding to how the knight can move, the number of neighbours of a cell is upper bounded by 8, hence the time complexity for finding neighbours, checking if they exist, and checking if they have been visited, calculating their distance can all be upper bounded by $T(N) = \BigO(1)$. In the worst case scenario, all cells would have to be visited, and there are $N\times N$ cells. This would result in the overall worst case time complexity to be $T(N) = \BigO(N\times N) = \BigO(N^2)$.
+
+The space complexity of the algorithm arises from the \lstinline{distance} matrix and the size of the \lstinline{queue}. \lstinline{distance} is of size $S(N) = \BigO(N\times N)$ and the size of \lstinline{queue} is upper bounded by $S(N) = \BigO(N\times N)$, as there are at max $N\times N$ nodes in the graph. All other auxillary arrays like \lstinline{neighbours} and \lstinline{good_neighbour} are upper bounded by $S = \BigO(1)$. Hence the overall space complexity is given by $S = \BigO(N^2)$
+
+\end{document}
